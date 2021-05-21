@@ -153,7 +153,7 @@ function AIExecuteBuildStructureRNG(aiBrain, builder, buildingType, closeToBuild
             local markerTable = RUtils.AIGetSortedMassLocationsThreatRNG(aiBrain, constructionData.MinDistance, constructionData.MaxDistance, constructionData.ThreatMin, constructionData.ThreatMax, constructionData.ThreatRings, constructionData.ThreatType, relativeTo)
             relative = false
             for i,v in markerTable do
-                if VDist3( v.Position, relativeTo ) <= constructionData.MaxDistance and VDist3( v.Position, relativeTo ) >= constructionData.MinDistance then
+                if VDist3Sq( v.Position, relativeTo ) <= constructionData.MaxDistance*constructionData.MaxDistance and VDist3Sq( v.Position, relativeTo ) >= constructionData.MinDistance*constructionData.MinDistance then
                     if aiBrain:CanBuildStructureAt('ueb1103', v.Position) then
                         LOG('MassPoint found for engineer')
                         location = table.copy(markerTable[i])
@@ -213,5 +213,66 @@ function AIExecuteBuildStructureRNG(aiBrain, builder, buildingType, closeToBuild
         return true
     end
     -- At this point we're out of options, so move on to the next thing
+    return false
+end
+
+function AIBuildAdjacencyRNG(aiBrain, builder, buildingType , closeToBuilder, relative, buildingTemplate, baseTemplate, reference, cons)
+    local whatToBuild = aiBrain:DecideWhatToBuild(builder, buildingType, buildingTemplate)
+    if whatToBuild then
+        local unitSize = aiBrain:GetUnitBlueprint(whatToBuild).Physics
+        local template = {}
+        table.insert(template, {})
+        table.insert(template[1], { buildingType })
+        for k,v in reference do
+            if not v.Dead then
+                local targetSize = v:GetBlueprint().Physics
+                local targetPos = v:GetPosition()
+                targetPos[1] = targetPos[1] - (targetSize.SkirtSizeX/2)
+                targetPos[3] = targetPos[3] - (targetSize.SkirtSizeZ/2)
+                -- Top/bottom of unit
+                for i=0,((targetSize.SkirtSizeX/2)-1) do
+                    local testPos = { targetPos[1] + 1 + (i * 2), targetPos[3]-(unitSize.SkirtSizeZ/2), 0 }
+                    local testPos2 = { targetPos[1] + 1 + (i * 2), targetPos[3]+targetSize.SkirtSizeZ+(unitSize.SkirtSizeZ/2), 0 }
+                    -- check if the buildplace is to close to the border or inside buildable area
+                    if testPos[1] > 8 and testPos[1] < ScenarioInfo.size[1] - 8 and testPos[2] > 8 and testPos[2] < ScenarioInfo.size[2] - 8 then
+                        table.insert(template[1], testPos)
+                    end
+                    if testPos2[1] > 8 and testPos2[1] < ScenarioInfo.size[1] - 8 and testPos2[2] > 8 and testPos2[2] < ScenarioInfo.size[2] - 8 then
+                        table.insert(template[1], testPos2)
+                    end
+                end
+                -- Sides of unit
+                for i=0,((targetSize.SkirtSizeZ/2)-1) do
+                    local testPos = { targetPos[1]+targetSize.SkirtSizeX + (unitSize.SkirtSizeX/2), targetPos[3] + 1 + (i * 2), 0 }
+                    local testPos2 = { targetPos[1]-(unitSize.SkirtSizeX/2), targetPos[3] + 1 + (i*2), 0 }
+                    if testPos[1] > 8 and testPos[1] < ScenarioInfo.size[1] - 8 and testPos[2] > 8 and testPos[2] < ScenarioInfo.size[2] - 8 then
+                        table.insert(template[1], testPos)
+                    end
+                    if testPos2[1] > 8 and testPos2[1] < ScenarioInfo.size[1] - 8 and testPos2[2] > 8 and testPos2[2] < ScenarioInfo.size[2] - 8 then
+                        table.insert(template[1], testPos2)
+                    end
+                end
+            end
+        end
+        -- build near the base the engineer is part of, rather than the engineer location
+        local baseLocation = {nil, nil, nil}
+        if builder.BuildManagerData and builder.BuildManagerData.EngineerManager then
+            baseLocation = builder.BuildManagerdata.EngineerManager.Location
+        end
+        local location = aiBrain:FindPlaceToBuild(buildingType, whatToBuild, template, false, builder, baseLocation[1], baseLocation[3])
+        if location then
+            if location[1] > 8 and location[1] < ScenarioInfo.size[1] - 8 and location[2] > 8 and location[2] < ScenarioInfo.size[2] - 8 then
+                --LOG('Build '..repr(buildingType)..' at adjacency: '..repr(location) )
+                AddToBuildQueue(aiBrain, builder, whatToBuild, location, false)
+                return true
+            end
+        end
+        -- Build in a regular spot if adjacency not found
+        if cons.AdjRequired then
+            return false
+        else
+            return AIExecuteBuildStructure(aiBrain, builder, buildingType, builder, true,  buildingTemplate, baseTemplate)
+        end
+    end
     return false
 end

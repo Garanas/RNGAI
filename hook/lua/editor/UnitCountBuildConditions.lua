@@ -1,4 +1,5 @@
 local RUtils = import('/mods/RNGAI/lua/AI/RNGUtilities.lua')
+local AIUtils = import('/lua/ai/AIUtilities.lua')
 local BASEPOSTITIONS = {}
 local mapSizeX, mapSizeZ = GetMapSize()
 local GetCurrentUnits = moho.aibrain_methods.GetCurrentUnits
@@ -48,12 +49,14 @@ function CanBuildOnHydroLessThanDistanceRNG(aiBrain, locationType, distance, thr
     local engineerManager = aiBrain.BuilderManagers[locationType].EngineerManager
     if not engineerManager then
         --WARN('*AI WARNING: Invalid location - ' .. locationType)
+        LOG('hydro condition failed due to invalid engineermanager')
         return false
     end
     local markerTable = AIUtils.AIGetSortedHydroLocations(aiBrain, maxNum, threatMin, threatMax, threatRings, threatType, engineerManager.Location)
-    if markerTable[1] and VDist3(markerTable[1], engineerManager.Location) < distance then
-        return true
-    end
+        if markerTable[1] and VDist3Sq(markerTable[1], {engineerManager.Location[1],GetSurfaceHeight(engineerManager.Location[1],engineerManager.Location[3]),engineerManager.Location[3]}) < distance*distance then
+            return true
+        end
+    LOG('hydro condition failed due to sorted hydro location being outside range')
     return false
 end
 
@@ -812,24 +815,21 @@ function ArmyManagerBuild(aiBrain, uType, tier, unit)
     --LOG('Ratio for faction should be '..aiBrain.amanager.Ratios[factionIndex][uType][tier][unit])
     if aiBrain.amanager.Current[uType][tier][unit] < 1 then
         --LOG('Less than 1 unit of type '..unit)
-        if aiBrain.cmanager.categoryspend.fac[uType]/aiBrain.cmanager.income.r.m<0.5 then
-            return true
-        else
-            return false
-        end
-    elseif (aiBrain.amanager.Current[uType][tier][unit] / aiBrain.amanager.Total[uType][tier] ) < aiBrain.amanager.Ratios[factionIndex][uType][tier][unit]/aiBrain.amanager.Ratios[factionIndex][uType][tier].total then
+        return true
+    elseif (aiBrain.amanager.Current[uType][tier][unit] / aiBrain.amanager.Total[uType][tier] )+math.random(-15,15)/200 < aiBrain.amanager.Ratios[factionIndex][uType][tier][unit]/aiBrain.amanager.Ratios[factionIndex][uType][tier].total then
         --LOG('Current Ratio for '..unit..' is '..(aiBrain.amanager.Current[uType][tier][unit] / aiBrain.amanager.Total[uType][tier] * 100)..'should be '..aiBrain.amanager.Ratios[uType][tier][unit])
-        if aiBrain.cmanager.categoryspend.fac[uType]/aiBrain.cmanager.income.r.m<0.5 then
-            return true
-        else
-            return false
-        end
+        return true
     end
     --LOG('Current Ratio for '..unit..' is '..(aiBrain.amanager.Current[uType][tier][unit] / aiBrain.amanager.Total[uType][tier] * 100)..'should be '..aiBrain.amanager.Ratios[uType][tier][unit])
     return false
 
 end
-
+function LessThanIdleEngineersRNG(aiBrain,num)
+    if (table.getn(aiBrain:GetListOfUnits(categories.ENGINEER * categories.MOBILE - categories.COMMAND, true))-aiBrain:GetCurrentUnits(categories.ENGINEER * categories.MOBILE - categories.COMMAND))<num then
+        return true
+    end
+    return false
+end
 --[[
 function NavalBaseCheckRNG(aiBrain)
     -- Removed automatic setting of naval-Expasions-allowed. We have a Game-Option for this.

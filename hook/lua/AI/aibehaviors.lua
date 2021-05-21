@@ -487,7 +487,7 @@ function CDROverChargeRNG(aiBrain, cdr)
                 --LOG('Distance from home '..Utilities.XZDistanceTwoVectors(cdr.CDRHome, cdr:GetPosition()))
                 if EntityCategoryContains(categories.COMMAND, target) and target:GetHealth() < 4000 then
                     --LOG('Enemy ACU is under HP limit we can draw')
-                elseif ((enemyUnitThreat or acuIMAPThreat) > acuThreatLimit) and (Utilities.XZDistanceTwoVectors(cdr.CDRHome, cdr:GetPosition()) > 40) then
+                elseif ((enemyUnitThreat or acuIMAPThreat) > acuThreatLimit * cdr:GetHealthPercent()) and (Utilities.XZDistanceTwoVectors(cdr.CDRHome, cdr:GetPosition()) > 40) then
                     LOG('* AI-RNG: Enemy unit threat too high cease fighting, unitThreat :'..enemyUnitThreat)
                     continueFighting = false
                 end
@@ -793,9 +793,9 @@ function StructureUpgradeThread(unit, aiBrain, upgradeSpec, bypasseco)
     local massProduction = unitBp.Economy.ProductionPerSecondMass or 0
     local energyProduction = unitBp.Economy.ProductionPerSecondEnergy or 0
     
-    local massTrendNeeded = ( math.min( 0,(massNeeded / buildtime) * buildrate) - massProduction) * .1
+    local massTrendNeeded = ( math.max( 0,(massNeeded / buildtime) * buildrate)) * .1
     --LOG('Mass Trend Needed for '..unitTech..' Extractor :'..massTrendNeeded)
-    local energyTrendNeeded = ( math.min( 0,(energyNeeded / buildtime) * buildrate) - energyProduction) * .1
+    local energyTrendNeeded = ( math.max( 0,(energyNeeded / buildtime) * buildrate)) * .1
     --LOG('Energy Trend Needed for '..unitTech..' Extractor :'..energyTrendNeeded)
     local energyMaintenance = (upgradebp.Economy.MaintenanceConsumptionPerSecondEnergy or 10) * .1
 
