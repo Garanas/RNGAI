@@ -982,7 +982,7 @@ BuilderGroup {
         PlatoonTemplate = 'RNGAI LandAttack Small',                          -- Template Name. 
         --PlatoonAddBehaviors = { 'TacticalResponse' },
         Priority = 1000,                                                          -- Priority. 1000 is normal.
-        InstanceCount = 6,                                                      -- Number of platoons that will be formed.
+        InstanceCount = 2,                                                      -- Number of platoons that will be formed.
         BuilderType = 'Any',
         BuilderConditions = {
             { UCBC, 'EnemyUnitsGreaterAtLocationRadiusRNG', {  BaseRestrictedArea, 'LocationType', 0, categories.MOBILE - categories.SCOUT }},
@@ -996,6 +996,7 @@ BuilderGroup {
             AggressiveMove = true,                                              -- If true, the unit will attack everything while moving to the target.
             LocationType = 'LocationType',
             Defensive = true,
+            PlatoonLimit = 12,
             AttackEnemyStrength = 100,                                          -- Compare platoon to enemy strenght. 100 will attack equal, 50 weaker and 150 stronger enemies.
             TargetSearchPriorities = {
                 categories.EXPERIMENTAL,
@@ -1080,14 +1081,15 @@ BuilderGroup {
             AvoidClosestRadius = 50,
             GuardTimer = 10,              
             UseFormation = 'AttackFormation',
+            ThreatType = 'Structures',
             ThreatSupport = 5,
             PrioritizedCategories = {
                 categories.COMMAND,
+                categories.MASSEXTRACTION,
                 categories.EXPERIMENTAL,
                 categories.STRUCTURE * categories.DEFENSE,
                 categories.MOBILE * categories.LAND,
                 categories.ENGINEER,
-                categories.MASSEXTRACTION,
             },
         },    
     },
@@ -1114,16 +1116,16 @@ BuilderGroup {
         InstanceCount = 2,                                                      -- Number of platoons that will be formed.
         BuilderType = 'Any',
         BuilderConditions = {
-            { UCBC, 'LessThanGameTimeSecondsRNG', { 400 } }, -- don't build after 5 minutes
+            { UCBC, 'LessThanGameTimeSecondsRNG', { 600 } }, -- don't build after 5 minutes
             { UCBC, 'PoolGreaterAtLocation', { 'LocationType', 1, categories.MOBILE * categories.LAND * categories.INDIRECTFIRE - categories.ENGINEER - categories.EXPERIMENTAL } },
         },
         BuilderData = {
             SearchRadius = BaseEnemyArea,
             GetTargetsFromBase = true,
             RequireTransport = false,
-            AggressiveMove = true,
+            AggressiveMove = false,
             LocationType = 'LocationType',
-            Defensive = true,
+            Defensive = false,
             AttackEnemyStrength = 200,                              
             TargetSearchPriorities = { 
                 categories.ENGINEER,
@@ -1170,12 +1172,12 @@ BuilderGroup {
             PrioritizedCategories = {
                 categories.COMMAND,
                 categories.EXPERIMENTAL,
+                categories.MASSEXTRACTION,
                 categories.STRUCTURE * categories.DEFENSE,
                 categories.MOBILE * categories.LAND * categories.ANTIAIR,
                 categories.MOBILE * categories.LAND,
                 categories.ENGINEER,
                 categories.MOBILE * categories.LAND * categories.ANTIAIR,
-                categories.MASSEXTRACTION,
                 categories.ALLUNITS,
             },
         },
@@ -1209,12 +1211,12 @@ BuilderGroup {
             PrioritizedCategories = {
                 categories.COMMAND,
                 categories.EXPERIMENTAL,
+                categories.MASSEXTRACTION,
                 categories.STRUCTURE * categories.DEFENSE,
                 categories.MOBILE * categories.LAND * categories.ANTIAIR,
                 categories.MOBILE * categories.LAND,
                 categories.ENGINEER,
                 categories.MOBILE * categories.LAND * categories.ANTIAIR,
-                categories.MASSEXTRACTION,
                 categories.ALLUNITS,
             },
         },
@@ -1405,11 +1407,11 @@ BuilderGroup {
             ThreatSupport = 5,
             PrioritizedCategories = {
                 categories.COMMAND,
+                categories.MASSEXTRACTION,
                 categories.EXPERIMENTAL,
                 categories.STRUCTURE * categories.DEFENSE,
                 categories.MOBILE * categories.LAND,
                 categories.ENGINEER,
-                categories.MASSEXTRACTION,
             },
         },    
     },
@@ -1771,7 +1773,7 @@ BuilderGroup {
             MinThreatThreshold = 2000,		    -- If threat is lower than this, do not attack
             AvoidBases = true,
             AvoidBasesRadius = 120,
-            AggressiveMove = true,      
+            AggressiveMove = false,      
             AvoidClosestRadius = 10,
             UseFormation = 'NoFormation',
             TargetSearchPriorities = { 
@@ -1807,8 +1809,8 @@ BuilderGroup {
             MaxPathDistance = BaseEnemyArea, -- custom property to set max distance before a transport will be requested only used by GuardMarker plan
             FindHighestThreat = false,			-- Don't find high threat targets
             MaxThreatThreshold = 9900,			-- If threat is higher than this, do not attack
-            MinThreatThreshold = 3000,		    -- If threat is lower than this, do not attack
-            AvoidBases = true,
+            MinThreatThreshold = 2000,		    -- If threat is lower than this, do not attack
+            AvoidBases = false,
             AvoidBasesRadius = 150,
             AggressiveMove = true,      
             AvoidClosestRadius = 10,

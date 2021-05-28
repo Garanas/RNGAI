@@ -110,7 +110,7 @@ FactoryBuilderManager = Class(RNGFactoryBuilderManager) {
             return
         end
         factory.DelayThread = true
-        WaitSeconds(time)
+        WaitTicks(math.random(20,50))
         factory.DelayThread = false
         self:AssignBuildOrder(factory,bType)
     end,

@@ -968,11 +968,7 @@ function StructureUpgradeThread(unit, aiBrain, upgradeSpec, bypasseco)
 
                             upgradeIssued = true
                             IssueUpgrade({unit}, upgradeID)
-                            if bypasseco then
-                                --LOG('Upgrade Issued with bypass')
-                            else
-                                --LOG('Upgrade Issued without bypass')
-                            end
+
                             -- if upgrade issued and not completely full --
                             if massStorageRatio < 1 or energyStorageRatio < 1 then
                                 ForkThread(StructureUpgradeDelay, aiBrain, aiBrain.UpgradeIssuedPeriod)  -- delay the next upgrade by the full amount
@@ -985,7 +981,7 @@ function StructureUpgradeThread(unit, aiBrain, upgradeSpec, bypasseco)
                             end
 
                             repeat
-                               WaitTicks(50)
+                                WaitTicks(50)
                             until unit.Dead or (unit.UnitBeingBuilt:GetBlueprint().BlueprintId == upgradeID) -- Fix this!
                         end
 

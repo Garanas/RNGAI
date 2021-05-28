@@ -76,7 +76,33 @@ BuilderGroup {
             DesiresAssist = false,
             Construction = {
                 RepeatBuild = true,
+                Type = 'Mass',
                 MaxDistance = 120,
+                ThreatMin = -500,
+                ThreatMax = 0,
+                ThreatType = 'AntiSurface',
+                BuildStructures = {
+                    'T1Resource',
+                },
+            }
+        }
+    },
+    Builder {
+        BuilderName = 'RNGAI T1Engineer Mass 400 MexBuild',
+        PlatoonTemplate = 'EngineerBuilderRNG',
+        Priority = 995,
+        InstanceCount = 1,
+        BuilderConditions = { 
+            { MABC, 'CanBuildOnMassLessThanDistance', { 'LocationType', 400, -500, 0, 0, 'AntiSurface', 1}},
+        },
+        BuilderType = 'Any',
+        BuilderData = {
+            NeedGuard = false,
+            DesiresAssist = false,
+            Construction = {
+                RepeatBuild = true,
+                Type = 'Mass',
+                MaxDistance = 400,
                 ThreatMin = -500,
                 ThreatMax = 0,
                 ThreatType = 'AntiSurface',
@@ -215,6 +241,7 @@ BuilderGroup {
             Construction = {
                 RepeatBuild = true,
                 MexThreat = true,
+                Type = 'Mass',
                 MaxDistance = 2000,
                 ThreatMin = -500,
                 ThreatMax = 4,
@@ -390,8 +417,7 @@ BuilderGroup {
         InstanceCount = 2,
         BuilderConditions = {
             { UCBC, 'CheckBuildPlatoonDelayRNG', { 'MassStorage' }},
-            { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.MASSSTORAGE } },
-            { UCBC, 'HaveGreaterThanUnitsWithCategory', { 2, categories.MASSEXTRACTION * (categories.TECH2 + categories.TECH3)}},
+            { UCBC, 'HaveGreaterThanUnitsWithCategory', { 3, categories.MASSEXTRACTION * (categories.TECH2 + categories.TECH3)}},
             { MABC, 'MarkerLessThanDistance',  { 'Mass', 150, -3, 0, 0}},
             { EBC, 'GreaterThanEconEfficiencyRNG', { 1.1, 1.1 }},
             { UCBC, 'UnitCapCheckLess', { .8 } },
