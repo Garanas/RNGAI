@@ -35,7 +35,7 @@ local NavalExpansionAdjust = function(self, aiBrain, builderManager)
         return 650
     else
         --LOG('NavalExpansionAdjust return 750')
-        return 750
+        return 850
     end
 end
 
@@ -78,8 +78,8 @@ BuilderGroup {
     },
     Builder {
         BuilderName = 'RNGAI T1 Vacant Starting Area 250 Small',
-        PlatoonTemplate = 'EngineerBuilderRNG',
-        Priority = 700,
+        PlatoonTemplate = 'EngineerBuilderT12RNG',
+        Priority = 750,
         InstanceCount = 2,
         BuilderConditions = {
             { UCBC, 'ExpansionBaseCheck', { } }, -- related to ScenarioInfo.Options.LandExpansionsAllowed
@@ -109,8 +109,8 @@ BuilderGroup {
     },
     Builder {
         BuilderName = 'RNGAI T1 Large Expansion Area 250 Small',
-        PlatoonTemplate = 'EngineerBuilderRNG',
-        Priority = 650,
+        PlatoonTemplate = 'EngineerBuilderT12RNG',
+        Priority = 750,
         InstanceCount = 1,
         BuilderConditions = {
             { UCBC, 'ExpansionBaseCheck', { } }, -- related to ScenarioInfo.Options.LandExpansionsAllowed

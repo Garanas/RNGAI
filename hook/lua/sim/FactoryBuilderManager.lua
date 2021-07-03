@@ -112,7 +112,15 @@ FactoryBuilderManager = Class(RNGFactoryBuilderManager) {
         factory.DelayThread = true
         WaitTicks(math.random(20,50))
         factory.DelayThread = false
-        self:AssignBuildOrder(factory,bType)
+        if factory.Offline then
+            while factory.Offline and factory and (not factory.Dead) do
+                --LOG('Factory is offline, wait inside delaybuildorder')
+                WaitTicks(50)
+            end
+            self:AssignBuildOrder(factory,bType)
+        else
+            self:AssignBuildOrder(factory,bType)
+        end
     end,
 
     FactoryFinishBuilding = function(self,factory,finishedUnit)
@@ -132,7 +140,7 @@ FactoryBuilderManager = Class(RNGFactoryBuilderManager) {
 				return self:FactoryDestroyed(factory)
 			end
 		end
-        self.Brain:RemoveConsumption(self.LocationType, factory)
+        --self.Brain:RemoveConsumption(self.LocationType, factory)
         self:AssignBuildOrder(factory, factory.BuilderManagerData.BuilderType)
     end,
 
@@ -171,7 +179,7 @@ FactoryBuilderManager = Class(RNGFactoryBuilderManager) {
             end
         end
         self.LocationActive = false
-        self.Brain:RemoveConsumption(self.LocationType, factory)
+        --self.Brain:RemoveConsumption(self.LocationType, factory)
     end,
 
     BuilderParamCheckOld = function(self,builder,params)

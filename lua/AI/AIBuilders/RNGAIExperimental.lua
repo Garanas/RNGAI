@@ -14,7 +14,7 @@ BuilderGroup {
         InstanceCount = 1,
         BuilderConditions = {
             { UCBC, 'CheckBuildPlattonDelay', { 'MobileExperimental' }},
-            { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.EXPERIMENTAL * categories.LAND}},
+            { UCBC, 'IsEngineerNotBuilding', { categories.EXPERIMENTAL * categories.LAND}},
             { UCBC, 'HaveGreaterThanUnitsWithCategory', { 0, categories.ENERGYPRODUCTION * categories.TECH3}},
             { UCBC, 'FactoryGreaterAtLocationRNG', { 'LocationType', 0, categories.FACTORY * categories.TECH3 } },
             { UCBC, 'HaveLessThanUnitsWithCategory', { 1, categories.EXPERIMENTAL * categories.LAND } },
@@ -47,7 +47,7 @@ BuilderGroup {
             { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 2, categories.EXPERIMENTAL * categories.LAND}},
             { UCBC, 'HaveGreaterThanUnitsWithCategory', { 1, categories.ENERGYPRODUCTION * categories.TECH3}},
             { UCBC, 'FactoryGreaterAtLocationRNG', { 'LocationType', 1, categories.FACTORY * categories.TECH3 } },
-            { EBC, 'GreaterThanEconTrendOverTimeRNG', { 0.0, 0.0 } },
+            { EBC, 'GreaterThanEconEfficiencyOverTimeRNG', { 1.0, 1.0 }},
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.10, 0.90 } },
         },
         BuilderType = 'Any',
@@ -134,7 +134,7 @@ BuilderGroup {
             { MIBC, 'FactionIndex', { 2, 3, 4 }}, -- 1: UEF, 2: Aeon, 3: Cybran, 4: Seraphim, 5: Nomads 
             { UCBC, 'CheckBuildPlattonDelay', { 'MobileExperimental' }},
             -- Have we the eco to build it ?
-            { UCBC, 'CanBuildCategory', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
+            { UCBC, 'CanBuildCategoryRNG', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
             { EBC, 'GreaterThanEconTrendOverTimeRNG', { 0.0, 0.0 } },
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.10, 0.95 } },
             { EBC, 'GreaterThanEconIncomeRNG', { 7.0, 600.0 }},                    -- Base income
@@ -162,7 +162,7 @@ BuilderGroup {
         BuilderConditions = {
             { MIBC, 'FactionIndex', { 2 }}, -- 1: UEF, 2: Aeon, 3: Cybran, 4: Seraphim, 5: Nomads 
             -- Have we the eco to build it ?
-            { UCBC, 'CanBuildCategory', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
+            { UCBC, 'CanBuildCategoryRNG', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
             { EBC, 'GreaterThanEconTrendOverTimeRNG', { 0.0, 0.0 } },
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.20, 0.95 } },
             { EBC, 'GreaterThanEconIncomeRNG', { 7.0, 600.0 }},                    -- Base income
@@ -222,7 +222,7 @@ BuilderGroup {
         InstanceCount = 1,
         BuilderConditions = {
             { UCBC, 'CheckBuildPlattonDelay', { 'MobileExperimental' }},
-            { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.EXPERIMENTAL * categories.LAND}},
+            { UCBC, 'IsEngineerNotBuilding', { categories.EXPERIMENTAL * categories.LAND}},
             { UCBC, 'HaveGreaterThanUnitsWithCategory', { 0, categories.ENERGYPRODUCTION * categories.TECH3}},
             { UCBC, 'FactoryGreaterAtLocationRNG', { 'LocationType', 0, categories.FACTORY * categories.TECH3 } },
             { UCBC, 'HaveLessThanUnitsWithCategory', { 1, categories.EXPERIMENTAL * categories.LAND } },
@@ -372,7 +372,7 @@ BuilderGroup {
             { MIBC, 'FactionIndex', { 2, 3, 4 }}, -- 1: UEF, 2: Aeon, 3: Cybran, 4: Seraphim, 5: Nomads 
             { UCBC, 'CheckBuildPlattonDelay', { 'MobileExperimental' }},
             -- Have we the eco to build it ?
-            { UCBC, 'CanBuildCategory', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
+            { UCBC, 'CanBuildCategoryRNG', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
             { EBC, 'GreaterThanEconTrendOverTimeRNG', { 0.0, 0.0 } },
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.10, 0.95 } },
             { EBC, 'GreaterThanEconIncomeRNG', { 40.0, 60.0 }},                    -- Base income
@@ -400,7 +400,7 @@ BuilderGroup {
         BuilderConditions = {
             { MIBC, 'FactionIndex', { 2 }}, -- 1: UEF, 2: Aeon, 3: Cybran, 4: Seraphim, 5: Nomads 
             -- Have we the eco to build it ?
-            { UCBC, 'CanBuildCategory', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
+            { UCBC, 'CanBuildCategoryRNG', { categories.MOBILE * categories.AIR * categories.EXPERIMENTAL - categories.SATELLITE } },
             { EBC, 'GreaterThanEconTrendOverTimeRNG', { 0.0, 0.0 } },
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.20, 0.95 } },
             { EBC, 'GreaterThanEconIncomeRNG', { 20.0, 60.0 }},                    -- Base income

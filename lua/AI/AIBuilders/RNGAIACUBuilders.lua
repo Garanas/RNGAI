@@ -475,7 +475,7 @@ BuilderGroup {
             { EBC, 'GreaterThanEconIncomeRNG',  { 0.5, 5.0}},
             --{ UCBC, 'IsAcuBuilder', {'RNGAI ACU T1 Land Factory Higher Pri'}},
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.04, 0.25}},
-            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.7, 0.7 }},
+            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.8, 0.8 }},
             { UCBC, 'UnitCapCheckLess', { .8 } },
         },
         BuilderType = 'Any',
@@ -499,7 +499,7 @@ BuilderGroup {
             { EBC, 'GreaterThanEconEfficiencyRNG', { 0.9, 1.0 }},
             { UCBC, 'FactoryCapCheck', { 'LocationType', 'Land' } },
             { EBC, 'MassToFactoryRatioBaseCheckRNG', { 'LocationType' } },
-            { UCBC, 'FactoryLessAtLocationRNG', { 'LocationType', 1, categories.FACTORY * categories.LAND * (categories.TECH2 + categories.TECH3) }},
+            { UCBC, 'FactoryLessAtLocationRNG', { 'LocationType', 3, categories.FACTORY * categories.LAND * (categories.TECH2 + categories.TECH3) }},
             { UCBC, 'UnitCapCheckLess', { .8 } },
         },
         BuilderType = 'Any',
@@ -521,7 +521,7 @@ BuilderGroup {
             { UCBC, 'CheckBuildPlatoonDelayRNG', { 'Factories' }},
             { EBC, 'GreaterThanEconIncomeRNG',  { 0.7, 8.0}},
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.0, 0.30}},
-            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.6, 0.8 }},
+            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.7, 0.8 }},
             { UCBC, 'FactoryLessAtLocationRNG', { 'LocationType', 1, categories.FACTORY * categories.AIR * ( categories.TECH1 + categories.TECH2 + categories.TECH3 ) }},
             { UCBC, 'FactoryCapCheck', { 'LocationType', 'Air' } },
             { UCBC, 'UnitCapCheckLess', { .8 } },
@@ -530,6 +530,10 @@ BuilderGroup {
         BuilderData = {
             Construction = {
                 BuildClose = true,
+                AdjacencyPriority = {
+                    categories.HYDROCARBON,
+                    categories.ENERGYPRODUCTION * categories.STRUCTURE,
+                },
                 BuildStructures = {
                     'T1AirFactory',
                 },
@@ -548,7 +552,7 @@ BuilderGroup {
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.05, 0.80}},
             { EBC, 'GreaterThanEconEfficiencyRNG', { 0.8, 1.0 }},
             { UCBC, 'FactoryLessAtLocationRNG', { 'LocationType', 2, categories.FACTORY * categories.AIR * ( categories.TECH1 + categories.TECH2 + categories.TECH3 ) }},
-            { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, 'FACTORY AIR TECH1' }},
+            { UCBC, 'IsEngineerNotBuilding', {categories.FACTORY * categories.AIR * categories.TECH1}},
             { UCBC, 'FactoryCapCheck', { 'LocationType', 'Air' } },
             { UCBC, 'UnitCapCheckLess', { .8 } },
         },
@@ -567,7 +571,7 @@ BuilderGroup {
         PlatoonTemplate = 'CommanderBuilderRNG',
         Priority = 1005,
         BuilderConditions = { 
-            { MABC, 'CanBuildOnMassLessThanDistance', { 'LocationType', 30, -500, 0, 0, 'AntiSurface', 1}},
+            { MABC, 'CanBuildOnMassDistanceRNG', { 'LocationType', 0, 30, nil, nil, 0, 'AntiSurface', 1}},
             { EBC, 'LessThanEconEfficiency', { 0.8, 2.0 }},
         },
         BuilderType = 'Any',
@@ -575,7 +579,13 @@ BuilderGroup {
             NeedGuard = false,
             DesiresAssist = false,
             Construction = {
+                RepeatBuild = false,
+                MexThreat = true,
+                Type = 'Mass',
                 MaxDistance = 30,
+                ThreatMin = -500,
+                ThreatMax = 20,
+                ThreatType = 'AntiSurface',
                 BuildStructures = {
                     'T1Resource',
                 },
@@ -841,7 +851,7 @@ BuilderGroup {
         PlatoonTemplate = 'CommanderBuilderRNG',
         Priority = 850,
         BuilderConditions = { 
-            { MABC, 'CanBuildOnMassLessThanDistance', { 'LocationType', 30, -500, 0, 0, 'AntiSurface', 1}},
+            { MABC, 'CanBuildOnMassDistanceRNG', { 'LocationType', 0, 30, nil, nil, 0, 'AntiSurface', 1}},
         },
         BuilderType = 'Any',
         BuilderData = {
@@ -863,7 +873,7 @@ BuilderGroup {
         BuilderConditions = {
             { UCBC, 'CheckBuildPlatoonDelayRNG', { 'Energy' }},
             { EBC, 'LessThanEnergyTrendRNG', { 0.0 } }, -- If our energy is trending into negatives
-            { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.STRUCTURE * categories.ENERGYPRODUCTION }},
+            { UCBC, 'IsEngineerNotBuilding', { categories.STRUCTURE * categories.ENERGYPRODUCTION }},
             { UCBC, 'HaveLessThanUnitsWithCategory', { 1, categories.STRUCTURE * categories.ENERGYPRODUCTION * categories.TECH2 }},
         },
         BuilderType = 'Any',

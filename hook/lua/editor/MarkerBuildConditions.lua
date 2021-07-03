@@ -1,10 +1,10 @@
-
+local CanBuildStructureAt = moho.aibrain_methods.CanBuildStructureAt
 local LastGetMassMarker = 0
 local LastCheckMassMarker = {}
 local MassMarker = {}
 local LastMassBOOL = false
 
-function CanBuildOnMassLessThanDistance(aiBrain, locationType, distance, threatMin, threatMax, threatRings, threatType, maxNum )
+--[[function CanBuildOnMassDistanceRNG(aiBrain, locationType, distance, threatMin, threatMax, threatRings, threatType, maxNum )
     local engineerManager = aiBrain.BuilderManagers[locationType].EngineerManager
     if not engineerManager then
         --WARN('*AI WARNING: Invalid location - ' .. locationType)
@@ -13,11 +13,8 @@ function CanBuildOnMassLessThanDistance(aiBrain, locationType, distance, threatM
     local position = {engineerManager.Location[1],GetSurfaceHeight(engineerManager.Location[1],engineerManager.Location[3]),engineerManager.Location[3]}
     
     local markerTable = AIUtils.AIGetSortedMassLocations(aiBrain, maxNum, threatMin, threatMax, threatRings, threatType, position)
-    if markerTable[1] and VDist3Sq( markerTable[1], position ) < distance*distance then
-        return true
-    end
-    return false
-end
+    return VDist2Sq( markerTable[1][1], markerTable[1][3], position[1], position[3] ) < distance * distance
+end]]
 
 function CanBuildOnMassEng2(aiBrain, engPos, distance)
     local MassMarker = {}
@@ -27,9 +24,9 @@ function CanBuildOnMassEng2(aiBrain, engPos, distance)
                 -- mass marker is too close to border, skip it.
                 continue
             end 
-            local mexDistance = VDist3Sq( v.position, engPos )
-            if mexDistance < distance and aiBrain:CanBuildStructureAt('ueb1103', v.position) then
-                LOG('mexDistance '..mexDistance)
+            local mexDistance = VDist3( v.position, engPos )
+            if mexDistance < distance and CanBuildStructureAt(aiBrain, 'ueb1103', v.position) then
+                --LOG('mexDistance '..mexDistance)
                 table.insert(MassMarker, {Position = v.position, Distance = mexDistance , MassSpot = v})
             end
         end
@@ -69,7 +66,7 @@ function CanBuildOnMassEng(aiBrain, engPos, distance, threatMin, threatMax, thre
                 break
             end
             --LOG(_..'Checking marker with max distance ['..distance..']. Actual marker has distance: ('..(v.Distance)..').')
-            if aiBrain:CanBuildStructureAt('ueb1103', v.Position) then
+            if CanBuildStructureAt(aiBrain, 'ueb1103', v.Position) then
                 if threatCheck then
                     local threat = aiBrain:GetThreatAtPosition(v.Position, threatRings, true, threatType or 'Overall')
                     if threat <= threatMin or threat >= threatMax then
@@ -86,7 +83,7 @@ end
 
 function CanBuildOnMassDistanceRNG(aiBrain, locationType, minDistance, maxDistance, threatMin, threatMax, threatRings, threatType, maxNum )
     if LastGetMassMarker < GetGameTimeSeconds() then
-        LastGetMassMarker = GetGameTimeSeconds()+10
+        LastGetMassMarker = GetGameTimeSeconds()+5
         local engineerManager = aiBrain.BuilderManagers[locationType].EngineerManager
         if not engineerManager then
             --WARN('*AI WARNING: CanBuildOnMass: Invalid location - ' .. locationType)
@@ -119,7 +116,7 @@ function CanBuildOnMassDistanceRNG(aiBrain, locationType, minDistance, maxDistan
                 break
             end
             --LOG(_..'Checking marker with max maxDistance ['..maxDistance..'] minDistance ['..minDistance..'] . Actual marker has distance: ('..(v.Distance)..').')
-            if aiBrain:CanBuildStructureAt('ueb1103', v.Position) then
+            if CanBuildStructureAt(aiBrain, 'ueb1103', v.Position) then
                 if threatCheck then
                     local threat = aiBrain:GetThreatAtPosition(v.Position, threatRings, true, threatType or 'Overall')
                     if threat <= threatMin or threat >= threatMax then

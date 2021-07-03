@@ -3,6 +3,7 @@ local AIUtils = import('/lua/ai/AIUtilities.lua')
 local BASEPOSTITIONS = {}
 local mapSizeX, mapSizeZ = GetMapSize()
 local GetCurrentUnits = moho.aibrain_methods.GetCurrentUnits
+local IsAnyEngineerBuilding = moho.aibrain_methods.IsAnyEngineerBuilding
 
 -- Check if less than num in seconds
 function LessThanGameTimeSecondsRNG(aiBrain, num)
@@ -19,6 +20,15 @@ function HaveUnitRatioRNG(aiBrain, ratio, categoryOne, compareType, categoryTwo)
     local numTwo = aiBrain:GetCurrentUnits(categoryTwo)
     --LOG(aiBrain:GetArmyIndex()..' CompareBody {World} ( '..numOne..' '..compareType..' '..numTwo..' ) -- ['..ratio..'] -- '..categoryOne..' '..compareType..' '..categoryTwo..' ('..(numOne / numTwo)..' '..compareType..' '..ratio..' ?) return '..repr(CompareBody(numOne / numTwo, ratio, compareType)))
     return CompareBody(numOne / numTwo, ratio, compareType)
+end
+
+local FactionIndexToCategory = {[1] = categories.UEF, [2] = categories.AEON, [3] = categories.CYBRAN, [4] = categories.SERAPHIM, [5] = categories.NOMADS, [6] = categories.ARM, [7] = categories.CORE }
+function CanBuildCategoryRNG(aiBrain,category)
+    -- convert text categories like 'MOBILE AIR' to 'categories.MOBILE * categories.AIR'
+    local FactionCat = FactionIndexToCategory[aiBrain:GetFactionIndex()] or categories.ALLUNITS
+    local numBuildableUnits = table.getn(EntityCategoryGetUnitList(category * FactionCat)) or -1
+    --LOG('* CanBuildCategory: FactionIndex: ('..repr(aiBrain:GetFactionIndex())..') numBuildableUnits:'..numBuildableUnits..' - '..repr( EntityCategoryGetUnitList(category * FactionCat) ))
+    return numBuildableUnits > 0
 end
 
 -- ##############################################################################################################
@@ -581,19 +591,19 @@ function ScalePlatoonSizeRNG(aiBrain, locationType, type, unitCategory)
     local currentTime = GetGameTimeSeconds()
     if type == 'LAND' then
         if currentTime < 240  then
-            if PoolGreaterAtLocation(aiBrain, locationType, 2, unitCategory) then
+            if PoolGreaterAtLocation(aiBrain, locationType, 3, unitCategory) then
                 return true
             end
         elseif currentTime < 480 then
-            if PoolGreaterAtLocation(aiBrain, locationType, 4, unitCategory) then
+            if PoolGreaterAtLocation(aiBrain, locationType, 5, unitCategory) then
                 return true
             end
         elseif currentTime < 720 then
-            if PoolGreaterAtLocation(aiBrain, locationType, 6, unitCategory) then
+            if PoolGreaterAtLocation(aiBrain, locationType, 7, unitCategory) then
                 return true
             end
         elseif currentTime > 900 then
-            if PoolGreaterAtLocation(aiBrain, locationType, 8, unitCategory) then
+            if PoolGreaterAtLocation(aiBrain, locationType, 9, unitCategory) then
                 return true
             end
         else
@@ -667,11 +677,11 @@ function ScalePlatoonSizeRNG(aiBrain, locationType, type, unitCategory)
                 return true
             end
         elseif currentTime < 900 and aiBrain.BrainIntel.AirAttackMode then
-            if PoolGreaterAtLocation(aiBrain, locationType, 1, unitCategory) then
+            if PoolGreaterAtLocation(aiBrain, locationType, 2, unitCategory) then
                 return true
             end
         elseif currentTime > 1200 and aiBrain.BrainIntel.AirAttackMode then
-            if PoolGreaterAtLocation(aiBrain, locationType, 2, unitCategory) then
+            if PoolGreaterAtLocation(aiBrain, locationType, 3, unitCategory) then
                 return true
             end
         elseif currentTime < 900 then
@@ -816,7 +826,7 @@ function ArmyManagerBuild(aiBrain, uType, tier, unit)
     if aiBrain.amanager.Current[uType][tier][unit] < 1 then
         --LOG('Less than 1 unit of type '..unit)
         return true
-    elseif (aiBrain.amanager.Current[uType][tier][unit] / aiBrain.amanager.Total[uType][tier] )+math.random(-15,15)/200 < aiBrain.amanager.Ratios[factionIndex][uType][tier][unit]/aiBrain.amanager.Ratios[factionIndex][uType][tier].total then
+    elseif (aiBrain.amanager.Current[uType][tier][unit] / aiBrain.amanager.Total[uType][tier]) < (aiBrain.amanager.Ratios[factionIndex][uType][tier][unit]/aiBrain.amanager.Ratios[factionIndex][uType][tier].total) then
         --LOG('Current Ratio for '..unit..' is '..(aiBrain.amanager.Current[uType][tier][unit] / aiBrain.amanager.Total[uType][tier] * 100)..'should be '..aiBrain.amanager.Ratios[uType][tier][unit])
         return true
     end
@@ -824,12 +834,15 @@ function ArmyManagerBuild(aiBrain, uType, tier, unit)
     return false
 
 end
-function LessThanIdleEngineersRNG(aiBrain,num)
-    if (table.getn(aiBrain:GetListOfUnits(categories.ENGINEER * categories.MOBILE - categories.COMMAND, true))-aiBrain:GetCurrentUnits(categories.ENGINEER * categories.MOBILE - categories.COMMAND))<num then
-        return true
+
+function IsEngineerNotBuilding(aiBrain, category)
+    -- Returns true if no engineer is building anything in the category
+    if IsAnyEngineerBuilding(aiBrain, category) then
+        return false
     end
-    return false
+    return true 
 end
+
 --[[
 function NavalBaseCheckRNG(aiBrain)
     -- Removed automatic setting of naval-Expasions-allowed. We have a Game-Option for this.

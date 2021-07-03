@@ -213,6 +213,7 @@ function MassToFactoryRatioBaseCheckRNG(aiBrain, locationType)
 end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 function FactorySpendRatioRNG(aiBrain,uType,ratio,greater)
     if not greater or greater~='greater' then
         if aiBrain.cmanager.categoryspend.fac[uType]/aiBrain.cmanager.income.r.m+math.random(-15,15)/200<ratio then
@@ -319,10 +320,19 @@ function AvgFuelRatioRNG(aiBrain,ratio,greater)
             return false
 =======
 function FactorySpendRatioRNG(aiBrain,uType,ratio)
+=======
+function FactorySpendRatioRNG(aiBrain,uType, noStorageCheck)
+>>>>>>> experimental
     --LOG('Current Spend Ratio '..(aiBrain.cmanager.categoryspend.fact[uType] / aiBrain.cmanager.income.r.m))
-    --LOG('Desire Ratio '..ratio)
-    if aiBrain.cmanager.categoryspend.fact[uType] / aiBrain.cmanager.income.r.m < ratio then
-        if (GetEconomyStored(aiBrain, 'MASS') >= 20 and GetEconomyStored(aiBrain, 'ENERGY') >= 100) then
+    local mexSpend = (aiBrain.cmanager.categoryspend.mex.T1 + aiBrain.cmanager.categoryspend.mex.T2 + aiBrain.cmanager.categoryspend.mex.T3) or 0
+    if aiBrain.cmanager.categoryspend.fact[uType] / (aiBrain.cmanager.income.r.m - mexSpend) < aiBrain.ProductionRatios[uType] then
+        if aiBrain.ChokeFlag and uType == 'Land' then 
+            if (GetEconomyStoredRatio(aiBrain, 'MASS') >= 0.10 and GetEconomyStoredRatio(aiBrain, 'ENERGY') >= 0.95) then
+                return true
+            end
+        elseif noStorageCheck then
+            return true
+        elseif (GetEconomyStored(aiBrain, 'MASS') >= 20 and GetEconomyStored(aiBrain, 'ENERGY') >= 100) then
             return true
 >>>>>>> experimental
         end

@@ -40,7 +40,7 @@ EngineerManager = Class(RNGEngineerManager) {
                 end
             end
         end
-        self.Brain:RemoveConsumption(self.LocationType, unit)
+        --self.Brain:RemoveConsumption(self.LocationType, unit)
     end,
 
     ManagerLoopBody = function(self,builder,bType)
@@ -190,7 +190,7 @@ EngineerManager = Class(RNGEngineerManager) {
             end
         end
 
-        self.Brain:RemoveConsumption(self.LocationType, unit)
+        --self.Brain:RemoveConsumption(self.LocationType, unit)
     end,
 
     LowMass = function(self)
@@ -198,7 +198,7 @@ EngineerManager = Class(RNGEngineerManager) {
         if not self.Brain.RNG then
             return RNGEngineerManager.LowMass(self)
         end
-        LOG('LowMass Condition detected by default eco manager')
+        --LOG('LowMass Condition detected by default eco manager')
     end,
 
     LowEnergy = function(self)
@@ -206,6 +206,6 @@ EngineerManager = Class(RNGEngineerManager) {
         if not self.Brain.RNG then
             return RNGEngineerManager.LowEnergy(self)
         end
-        LOG('LowEnergy Condition detected by default eco manager')
+        --LOG('LowEnergy Condition detected by default eco manager')
     end,
 }

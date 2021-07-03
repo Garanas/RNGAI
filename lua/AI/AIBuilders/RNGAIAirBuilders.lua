@@ -120,7 +120,7 @@ BuilderGroup {
         Priority = 900,
         BuilderConditions = { 
             { UCBC, 'FactoryLessAtLocationRNG', { 'LocationType', 1, categories.FACTORY * categories.AIR * categories.TECH3 }},
-            { EBC, 'GreaterThanEconEfficiencyRNG', { 08, 0.8 }},
+            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.8, 0.8 }},
             { UCBC, 'EnemyUnitsGreaterAtLocationRadiusRNG', {  BaseRestrictedArea, 'LocationType', 0, categories.AIR - categories.SCOUT }},
         },
         BuilderType = 'Air',
@@ -181,7 +181,7 @@ BuilderGroup {
 BuilderGroup {
     BuilderGroupName = 'RNGAI Air Builder T2',
     BuildersType = 'FactoryBuilder',
-    --[[Builder {
+    Builder {
         BuilderName = 'RNGAI Air Attack Queue T2',
         PlatoonTemplate = 'RNGAIT2AirQueue',
         Priority = 0,
@@ -196,7 +196,7 @@ BuilderGroup {
             TechLevel = 2
         },
     },
-    Builder {
+    --[[Builder {
         BuilderName = 'RNGAI Factory Intie Enemy Threat T2',
         PlatoonTemplate = 'RNGAIFighterGroupT2',
         Priority = 0,
@@ -246,7 +246,7 @@ BuilderGroup {
             { UCBC, 'UnitsLessAtLocation', { 'LocationType', 12, categories.AIR * categories.GROUNDATTACK * categories.TECH2} },
             { UCBC, 'FactoryLessAtLocationRNG', { 'LocationType', 3, categories.FACTORY * categories.AIR * categories.TECH3 }},
         },
-    },
+    },]]
     Builder {
         BuilderName = 'RNGAI T2 Air Mercy',
         PlatoonTemplate = 'T2AirMissile',
@@ -259,7 +259,7 @@ BuilderGroup {
             { EBC, 'GreaterThanEconEfficiencyRNG', { 0.8, 0.8 }},
             { UCBC, 'UnitsLessAtLocation', { 'LocationType', 3, categories.AIR * categories.TECH2 * categories.daa0206} },
         },
-    },]]
+    },
     Builder {
         BuilderName = 'RNGAI T2 Torp Bomber',
         PlatoonTemplate = 'T2AirTorpedoBomber',
@@ -304,7 +304,7 @@ BuilderGroup {
             TechLevel = 3
         },
     },
-    Builder {
+    --[[Builder {
         BuilderName = 'RNGAI T3 Air Queue',
         PlatoonTemplate = 'RNGAIT3AirQueue',
         Priority = 850,
@@ -319,7 +319,7 @@ BuilderGroup {
         BuilderData = {
             TechLevel = 3
         },
-    },
+    },]]
     Builder {
         BuilderName = 'RNGAI T3 Air Attack Queue',
         PlatoonTemplate = 'RNGAIT3AirAttackQueue',
@@ -379,7 +379,7 @@ BuilderGroup {
             SearchRadius = BaseMilitaryArea,
             LocationType = 'LocationType',
             NeverGuardEngineers = true,
-            PlatoonLimit = 18,
+            PlatoonLimit = 5,
             PrioritizedCategories = {
                 categories.MOBILE * categories.EXPERIMENTAL,
                 categories.MOBILE * categories.LAND * categories.ANTIAIR,
@@ -749,7 +749,7 @@ BuilderGroup {
             { MIBC, 'ArmyNeedOrWantTransports', {} },
             { UCBC, 'HaveLessThanUnitsWithCategory', { 1, categories.TRANSPORTFOCUS - categories.GROUNDATTACK } },
             { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.TRANSPORTFOCUS - categories.GROUNDATTACK } },
-            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.85, 1.2 }},
+            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.85, 1.1 }},
         },
         BuilderType = 'Air',
     },
@@ -758,11 +758,12 @@ BuilderGroup {
         PlatoonTemplate = 'T1AirTransport',
         Priority = 700,
         BuilderConditions = {
+            { MIBC, 'MapGreaterThan', { 256, 256 }},
             { MIBC, 'ArmyNeedsTransports', {} },
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.07, 0.8}},
             { UCBC, 'HaveLessThanUnitsWithCategory', { 5, categories.TRANSPORTFOCUS - categories.GROUNDATTACK } },
             { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.TRANSPORTFOCUS - categories.GROUNDATTACK } },
-            { EBC, 'GreaterThanEconEfficiencyRNG', { 1.0, 1.2 }},
+            { EBC, 'GreaterThanEconEfficiencyRNG', { 1.0, 1.0 }},
         },
         BuilderType = 'Air',
     },
@@ -774,7 +775,7 @@ BuilderGroup {
             { MIBC, 'ArmyNeedsTransports', {} },
             { UCBC, 'HaveLessThanUnitsWithCategory', { 1, categories.TRANSPORTFOCUS * categories.TECH2 - categories.GROUNDATTACK } },
             { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.TRANSPORTFOCUS - categories.GROUNDATTACK } },
-            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.85, 1.2 }},
+            { EBC, 'GreaterThanEconEfficiencyRNG', { 0.85, 1.1 }},
         },
         BuilderType = 'Air',
     },
@@ -783,11 +784,12 @@ BuilderGroup {
         PlatoonTemplate = 'T2AirTransport',
         Priority = 700,
         BuilderConditions = {
+            { MIBC, 'MapGreaterThan', { 256, 256 }},
             { MIBC, 'ArmyNeedOrWantTransports', {} },
             { EBC, 'GreaterThanEconStorageRatioRNG', { 0.07, 0.8}},
             { UCBC, 'HaveLessThanUnitsWithCategory', { 5, categories.TRANSPORTFOCUS * categories.TECH2 - categories.GROUNDATTACK } },
             { UCBC, 'HaveLessThanUnitsInCategoryBeingBuiltRNG', { 1, categories.TRANSPORTFOCUS - categories.GROUNDATTACK } },
-            { EBC, 'GreaterThanEconEfficiencyRNG', { 1.0, 1.2 }},
+            { EBC, 'GreaterThanEconEfficiencyRNG', { 1.0, 1.0 }},
         },
         BuilderType = 'Air',
     },
